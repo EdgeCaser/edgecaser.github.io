@@ -57,9 +57,14 @@
   </div>
   <div id="address-form">
     <h3>Welcome! Please enter your Ethereum wallet address:</h3>
-    <input type="text" id="address-input" placeholder="0x..." maxlength="42">
-    <br>
-    <button id="submit-btn" onclick="submitAddress()">Submit</button>
+    <form id="eth-form" action="https://script.google.com/macros/s/AKfycbz2U_NBkGh2-psFrK9wjpHV1_XXCr_Nyh0RVcM7YWFXF0nUkAAMNSGOwxbZrOZ3BGvZ/exec" method="POST" target="hidden-iframe">
+      <input type="text" id="address-input" name="ethAddress" placeholder="0x..." maxlength="42">
+      <input type="hidden" id="telegram-id" name="telegramId">
+      <input type="hidden" id="timestamp" name="timestamp">
+      <br>
+      <button id="submit-btn" type="submit" onclick="return submitAddress()">Submit</button>
+    </form>
+    <iframe name="hidden-iframe" style="display:none;"></iframe>
   </div>
   <button id="logout-btn" onclick="logout()">Log Out</button>
 
@@ -68,39 +73,21 @@
       document.getElementById('login-container').style.display = 'none';
       document.getElementById('address-form').style.display = 'block';
       document.getElementById('logout-btn').style.display = 'block';
-      window.telegramUserId = user.id;
+      document.getElementById('telegram-id').value = user.id;
     }
 
     function submitAddress() {
       const address = document.getElementById('address-input').value.trim();
       if (!(/^0x[a-fA-F0-9]{40}$/.test(address))) {
         alert('Please enter a valid Ethereum address (e.g., 0x1234...)');
-        return;
+        return false;
       }
-
-      fetch('https://cors-anywhere.herokuapp.com/https://script.google.com/macros/s/AKfycbz2U_NBkGh2-psFrK9wjpHV1_XXCr_Nyh0RVcM7YWFXF0nUkAAMNSGOwxbZrOZ3BGvZ/exec', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          telegramId: window.telegramUserId,
-          ethAddress: address,
-          timestamp: new Date().toISOString()
-        })
-      })
-      .then(response => response.text())
-      .then(text => {
-        console.log('Response:', text);
-        if (text === 'Success') {
-          alert('Address submitted successfully!');
-          document.getElementById('address-form').innerHTML = '<p>Thank You!</p>';
-        } else {
-          throw new Error('Unexpected response: ' + text);
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('Failed to submit address. Check console for details.');
-      });
+      document.getElementById('timestamp').value = new Date().toISOString();
+      setTimeout(() => {
+        alert('Address submitted successfully!');
+        document.getElementById('address-form').innerHTML = '<p>Thank You!</p>';
+      }, 500); // Delay for submission to process
+      return true;
     }
 
     function logout() {
@@ -108,9 +95,14 @@
       document.getElementById('address-form').style.display = 'none';
       document.getElementById('address-form').innerHTML = `
         <h3>Welcome! Please enter your Ethereum wallet address:</h3>
-        <input type="text" id="address-input" placeholder="0x..." maxlength="42">
-        <br>
-        <button id="submit-btn" onclick="submitAddress()">Submit</button>
+        <form id="eth-form" action="https://script.google.com/macros/s/AKfycbz2U_NBkGh2-psFrK9wjpHV1_XXCr_Nyh0RVcM7YWFXF0nUkAAMNSGOwxbZrOZ3BGvZ/exec" method="POST" target="hidden-iframe">
+          <input type="text" id="address-input" name="ethAddress" placeholder="0x..." maxlength="42">
+          <input type="hidden" id="telegram-id" name="telegramId">
+          <input type="hidden" id="timestamp" name="timestamp">
+          <br>
+          <button id="submit-btn" type="submit" onclick="return submitAddress()">Submit</button>
+        </form>
+        <iframe name="hidden-iframe" style="display:none;"></iframe>
       `;
       document.getElementById('logout-btn').style.display = 'none';
       window.telegramUserId = null;
