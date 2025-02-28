@@ -4,15 +4,54 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { margin: 0; padding: 20px; font-family: Arial, sans-serif; text-align: center; }
-    #login-container { margin-bottom: 20px; }
-    #address-form { display: none; }
-    #address-input { padding: 8px; width: 300px; margin: 10px 0; }
-    #submit-btn { padding: 8px 16px; background-color: #008CBA; color: white; border: none; cursor: pointer; }
-    #submit-btn:hover { background-color: #006d96; }
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #000000;
+      color: #ffffff;
+    }
+    #header-image {
+      max-width: 300px; /* Adjust as needed */
+      margin: 0 auto 20px;
+      display: block;
+    }
+    #login-container {
+      margin-bottom: 20px;
+    }
+    #address-form {
+      display: none;
+    }
+    #address-input {
+      padding: 8px;
+      width: 300px;
+      margin: 10px 0;
+      background-color: #333333;
+      color: #ffffff;
+      border: 1px solid #ffffff;
+    }
+    #submit-btn, #logout-btn {
+      padding: 8px 16px;
+      background-color: #008CBA;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin: 5px;
+    }
+    #submit-btn:hover, #logout-btn:hover {
+      background-color: #006d96;
+    }
+    #logout-btn {
+      display: none; /* Hidden until logged in */
+      position: fixed;
+      top: 10px;
+      right: 10px;
+    }
   </style>
 </head>
 <body>
+  <img id="header-image" src="YOUR_PNG_FILENAME.png" alt="Header Image">
   <div id="login-container">
     <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="cachicamochamo_bot" data-size="large" data-onauth="onTelegramAuth(user)"></script>
   </div>
@@ -22,11 +61,13 @@
     <br>
     <button id="submit-btn" onclick="submitAddress()">Submit</button>
   </div>
+  <button id="logout-btn" onclick="logout()">Log Out</button>
 
   <script>
     function onTelegramAuth(user) {
       document.getElementById('login-container').style.display = 'none';
       document.getElementById('address-form').style.display = 'block';
+      document.getElementById('logout-btn').style.display = 'block';
       window.telegramUserId = user.id;
     }
 
@@ -60,6 +101,21 @@
         console.error('Error:', error);
         alert('Failed to submit address. Check console for details.');
       });
+    }
+
+    function logout() {
+      // Reset UI
+      document.getElementById('login-container').style.display = 'block';
+      document.getElementById('address-form').style.display = 'none';
+      document.getElementById('address-form').innerHTML = `
+        <h3>Welcome! Please enter your Ethereum wallet address:</h3>
+        <input type="text" id="address-input" placeholder="0x..." maxlength="42">
+        <br>
+        <button id="submit-btn" onclick="submitAddress()">Submit</button>
+      `;
+      document.getElementById('logout-btn').style.display = 'none';
+      window.telegramUserId = null;
+      // Note: Telegram widget doesn't have a native logout; this resets the UI
     }
   </script>
 </body>
