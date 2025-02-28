@@ -13,7 +13,7 @@
       color: #ffffff;
     }
     #header-image {
-      max-width: 300px; /* Adjust as needed */
+      max-width: 300px;
       margin: 0 auto 20px;
       display: block;
     }
@@ -43,7 +43,7 @@
       background-color: #006d96;
     }
     #logout-btn {
-      display: none; /* Hidden until logged in */
+      display: none;
       position: fixed;
       top: 10px;
       right: 10px;
@@ -51,7 +51,7 @@
   </style>
 </head>
 <body>
-  <img id="header-image" src="YOUR_PNG_FILENAME.png" alt="Header Image">
+  <img id="header-image" src="vectorArt.svg" alt="Header Image">
   <div id="login-container">
     <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="cachicamochamo_bot" data-size="large" data-onauth="onTelegramAuth(user)"></script>
   </div>
@@ -104,7 +104,6 @@
     }
 
     function logout() {
-      // Reset UI
       document.getElementById('login-container').style.display = 'block';
       document.getElementById('address-form').style.display = 'none';
       document.getElementById('address-form').innerHTML = `
@@ -115,7 +114,6 @@
       `;
       document.getElementById('logout-btn').style.display = 'none';
       window.telegramUserId = null;
-      // Note: Telegram widget doesn't have a native logout; this resets the UI
     }
   </script>
 </body>
