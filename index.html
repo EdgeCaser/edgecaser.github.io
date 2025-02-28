@@ -25,25 +25,20 @@
 
   <script>
     function onTelegramAuth(user) {
-      // Hide login, show form
       document.getElementById('login-container').style.display = 'none';
       document.getElementById('address-form').style.display = 'block';
-      // Store user ID for reference (optional)
       window.telegramUserId = user.id;
     }
 
     function submitAddress() {
       const address = document.getElementById('address-input').value.trim();
-      // Basic validation: starts with 0x, 42 chars, hex
       if (!(/^0x[a-fA-F0-9]{40}$/.test(address))) {
         alert('Please enter a valid Ethereum address (e.g., 0x1234...)');
         return;
       }
 
-      // Send to Google Sheets via Apps Script Web App
-      fetch('https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbz2U_NBkGh2-psFrK9wjpHV1_XXCr_Nyh0RVcM7YWFXF0nUkAAMNSGOwxbZrOZ3BGvZ/exec/exec', {
+      fetch('https://script.google.com/macros/s/AKfycbz2U_NBkGh2-psFrK9wjpHV1_XXCr_Nyh0RVcM7YWFXF0nUkAAMNSGOwxbZrOZ3BGvZ/exec', {
         method: 'POST',
-        mode: 'no-cors', // Google Apps Script handles CORS
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           telegramId: window.telegramUserId,
@@ -51,13 +46,19 @@
           timestamp: new Date().toISOString()
         })
       })
-      .then(() => {
-        alert('Address submitted successfully!');
-        document.getElementById('address-form').innerHTML = '<p>Thank you!</p>';
+      .then(response => response.text()) // Get raw response
+      .then(text => {
+        console.log('Response:', text); // Log to console
+        if (text === 'Success') {
+          alert('Address submitted successfully!');
+          document.getElementById('address-form').innerHTML = '<p>Thank You!</p>';
+        } else {
+          throw new Error('Unexpected response: ' + text);
+        }
       })
       .catch(error => {
-        console.error('Error:', error);
-        alert('Something went wrong. Please try again.');
+        console.error('Error:', error); // Log errors
+        alert('Failed to submit address. Check console for details.');
       });
     }
   </script>
