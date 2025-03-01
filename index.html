@@ -4,15 +4,66 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { margin: 0; padding: 20px; font-family: Arial, sans-serif; text-align: center; }
-    #login-container { margin-bottom: 20px; }
-    #address-form { display: none; }
-    #address-input { padding: 8px; width: 300px; margin: 10px 0; }
-    #submit-btn { padding: 8px 16px; background-color: #008CBA; color: white; border: none; cursor: pointer; }
-    #submit-btn:hover { background-color: #006d96; }
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #000000;
+      color: #ffffff;
+    }
+    #header-image {
+      max-width: 300px;
+      margin: 0 auto 20px;
+      display: block;
+    }
+    #login-container {
+      margin-bottom: 20px;
+    }
+    #address-form {
+      display: none;
+    }
+    #address-input {
+      padding: 8px;
+      width: 300px;
+      margin: 10px 0;
+      background-color: #333333;
+      color: #ffffff;
+      border: 1px solid #ffffff;
+      font-size: 1.1em;
+    }
+    #submit-btn, #logout-btn {
+      padding: 10px 20px;
+      background-color: #008CBA;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin: 5px;
+      font-size: 1.1em;
+      box-shadow: 0 0 5px #008CBA;
+      transition: all 0.3s ease;
+    }
+    #submit-btn:hover, #logout-btn:hover {
+      background-color: #006d96;
+      box-shadow: 0 0 10px #006d96;
+    }
+    #logout-btn {
+      display: none;
+      position: fixed;
+      top: 10px;
+      right: 10px;
+    }
+    h3 {
+      font-size: 1.3em;
+      margin-bottom: 15px;
+    }
+    p {
+      font-size: 1.2em;
+    }
   </style>
 </head>
 <body>
+  <img id="header-image" src="vectorArt.svg" alt="Header Image">
   <div id="login-container">
     <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="cachicamochamo_bot" data-size="large" data-onauth="onTelegramAuth(user)"></script>
   </div>
@@ -22,11 +73,13 @@
     <br>
     <button id="submit-btn" onclick="submitAddress()">Submit</button>
   </div>
+  <button id="logout-btn" onclick="logout()">Log Out</button>
 
   <script>
     function onTelegramAuth(user) {
       document.getElementById('login-container').style.display = 'none';
       document.getElementById('address-form').style.display = 'block';
+      document.getElementById('logout-btn').style.display = 'block';
       window.telegramUserId = user.id;
     }
 
@@ -51,7 +104,7 @@
         console.log('Response:', text);
         if (text === 'Success') {
           alert('Address submitted successfully!');
-          document.getElementById('address-form').innerHTML = '<p>Thank You!</p>';
+          document.getElementById('address-form').innerHTML = '<p>Thank you! Come back in a few days to check your eligibility.</p>';
         } else {
           throw new Error('Unexpected response: ' + text);
         }
@@ -60,6 +113,19 @@
         console.error('Error:', error);
         alert('Failed to submit address. Check console for details.');
       });
+    }
+
+    function logout() {
+      document.getElementById('login-container').style.display = 'block';
+      document.getElementById('address-form').style.display = 'none';
+      document.getElementById('address-form').innerHTML = `
+        <h3>Welcome! Please enter your Ethereum wallet address:</h3>
+        <input type="text" id="address-input" placeholder="0x..." maxlength="42">
+        <br>
+        <button id="submit-btn" onclick="submitAddress()">Submit</button>
+      `;
+      document.getElementById('logout-btn').style.display = 'none';
+      window.telegramUserId = null;
     }
   </script>
 </body>
