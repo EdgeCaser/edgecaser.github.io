@@ -72,7 +72,6 @@
     <form id="eth-form" action="https://script.google.com/macros/s/AKfycbz2U_NBkGh2-psFrK9wjpHV1_XXCr_Nyh0RVcM7YWFXF0nUkAAMNSGOwxbZrOZ3BGvZ/exec" method="POST" target="hidden-iframe">
       <input type="text" id="address-input" name="ethAddress" placeholder="0x..." maxlength="42">
       <input type="hidden" id="telegram-id" name="telegramId">
-      <input type="hidden" id="telegram-username" name="telegramUsername">
       <input type="hidden" id="timestamp" name="timestamp">
       <br>
       <button id="submit-btn" type="submit" onclick="return submitAddress()">Submit</button>
@@ -87,7 +86,6 @@
       document.getElementById('address-form').style.display = 'block';
       document.getElementById('logout-btn').style.display = 'block';
       document.getElementById('telegram-id').value = user.id;
-      document.getElementById('telegram-username').value = user.username || '';
     }
 
     function submitAddress() {
@@ -97,16 +95,10 @@
         return false;
       }
       document.getElementById('timestamp').value = new Date().toISOString();
-      console.log('Submitting:', {
-        telegramId: document.getElementById('telegram-id').value,
-        telegramUsername: document.getElementById('telegram-username').value,
-        ethAddress: address,
-        timestamp: document.getElementById('timestamp').value
-      });
       setTimeout(() => {
         alert('Address submitted successfully!');
         document.getElementById('address-form').innerHTML = '<p>Thank you! Come back in a few days to check your eligibility.</p>';
-      }, 1000); // Increased delay to ensure submission completes
+      }, 500);
       return true;
     }
 
@@ -118,7 +110,6 @@
         <form id="eth-form" action="https://script.google.com/macros/s/AKfycbz2U_NBkGh2-psFrK9wjpHV1_XXCr_Nyh0RVcM7YWFXF0nUkAAMNSGOwxbZrOZ3BGvZ/exec" method="POST" target="hidden-iframe">
           <input type="text" id="address-input" name="ethAddress" placeholder="0x..." maxlength="42">
           <input type="hidden" id="telegram-id" name="telegramId">
-          <input type="hidden" id="telegram-username" name="telegramUsername">
           <input type="hidden" id="timestamp" name="timestamp">
           <br>
           <button id="submit-btn" type="submit" onclick="return submitAddress()">Submit</button>
