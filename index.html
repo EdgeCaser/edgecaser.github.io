@@ -77,7 +77,7 @@
       <br>
       <button id="submit-btn" type="submit" onclick="return submitAddress()">Submit</button>
     </form>
-    <iframe name="hidden-iframe" style="display:none;" onload="submissionComplete(this)"></iframe>
+    <iframe name="hidden-iframe" style="display:none;" onload="submissionComplete()"></iframe>
   </div>
   <button id="logout-btn" onclick="logout()">Log Out</button>
 
@@ -97,30 +97,12 @@
         return false;
       }
       document.getElementById('timestamp').value = new Date().toISOString();
-      console.log('Submitting:', {
-        telegramId: document.getElementById('telegram-id').value,
-        telegramUsername: document.getElementById('telegram-username').value,
-        ethAddress: address,
-        timestamp: document.getElementById('timestamp').value
-      });
       return true;
     }
 
-    function submissionComplete(iframe) {
-      console.log('Iframe loaded, checking response');
-      try {
-        const response = iframe.contentWindow.document.body.innerText;
-        console.log('Response:', response);
-        if (response === 'Success') {
-          alert('Address submitted successfully!');
-          document.getElementById('address-form').innerHTML = '<p>Thank you! Come back in a few days to check your eligibility.</p>';
-        } else {
-          alert('Submission failed. Please try again.');
-        }
-      } catch (e) {
-        console.error('Error reading iframe response:', e);
-        alert('Submission might have failed. Check console.');
-      }
+    function submissionComplete() {
+      alert('Address submitted successfully!');
+      document.getElementById('address-form').innerHTML = '<p>Thank you! Come back in a few days to check your eligibility.</p>';
     }
 
     function logout() {
@@ -136,7 +118,7 @@
           <br>
           <button id="submit-btn" type="submit" onclick="return submitAddress()">Submit</button>
         </form>
-        <iframe name="hidden-iframe" style="display:none;" onload="submissionComplete(this)"></iframe>
+        <iframe name="hidden-iframe" style="display:none;" onload="submissionComplete()"></iframe>
       `;
       document.getElementById('logout-btn').style.display = 'none';
       window.telegramUserId = null;
